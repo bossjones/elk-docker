@@ -1,3 +1,4 @@
+#syntax=docker/dockerfile:1.3
 # Dockerfile for ELK stack
 # Elasticsearch, Logstash, Kibana 7.16.3
 
@@ -39,7 +40,7 @@ ARG ELK_VERSION=7.16.3
 ARG ELK_BASE_VERSION=7.16.3
 
 # replace with aarch64 for ARM64 systems
-ARG ARCH=x86_64 
+ARG ARCH=x86_64
 
 
 ### install Elasticsearch
