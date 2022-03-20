@@ -8,9 +8,9 @@
 
 rsyslog_centralized:
   image: bossjones/rsyslog:0.3.0
-  # command:
-  #   - /bin/sh
-  command: ['/bin/sh','-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o rsyslog /dev/null -m 640 /var/log/rsyslog-debug']
+  entrypoint:
+    - /bin/sh
+  command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o rsyslog /dev/null -m 640 /var/log/rsyslog-debug']
   environment:
     - _IMTCP_PORT=6170
     - _IMUDP_PORT=6160
