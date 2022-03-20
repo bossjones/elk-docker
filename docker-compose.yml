@@ -34,7 +34,7 @@ rsyslog_centralized:
     - elk
 
 fluent_bit_centralized:
-  image: fluent/fluent-bit:1.0.5
+  image: fluent/fluent-bit:1.2.0
   environment:
     - TAIL_BUF_LIMIT=5MB
   volumes:
