@@ -33,6 +33,23 @@ rsyslog_centralized:
   links:
     - elk
 
+fluent_bit_centralized:
+  image: fluent/fluent-bit:1.0.5
+  environment:
+    - TAIL_BUF_LIMIT=5MB
+  volumes:
+    - ./fluent-bit-centralized-conf/fluent-bit:/fluent-bit
+    - ./fluent-bit-centralized-conf/var/fluent-bit:/var/fluent-bit
+    - ./fluent-bit-centralized-conf/logging-volume:/logging-volume
+
+
+  ports:
+    - "2020:2020/tcp"
+    - "5140:5140/udp"
+  links:
+    - elk
+    - rsyslog_centralized
+
 
 elk:
   build: .
