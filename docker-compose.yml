@@ -10,7 +10,7 @@ rsyslog_centralized:
   image: bossjones/rsyslog:0.3.0
   entrypoint:
     - /bin/sh
-  command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o rsyslog /dev/null -m 640 /var/log/rsyslog-debug']
+  command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o syslog /dev/null -m 640 /var/log/rsyslog-debug']
   environment:
     - _IMTCP_PORT=6170
     - _IMUDP_PORT=6160
