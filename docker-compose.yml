@@ -20,11 +20,11 @@ rsyslog_centralized:
     - TZ=UTC
     # - RSYSLOG_DEBUG_FLAG=-d
   volumes:
-    - ./config:/config
-    - ./log:/log
-    - ./rsyslog-centralized:/rsyslog-centralized
-    - ./spool:/spool
-    - ./work:/work
+    - ./rsyslog-conf/config:/config
+    - ./rsyslog-conf/log:/log
+    - ./rsyslog-conf/rsyslog-centralized:/rsyslog-centralized
+    - ./rsyslog-conf/spool:/spool
+    - ./rsyslog-conf/work:/work
 
   ports:
     - "6160:6160/udp"
