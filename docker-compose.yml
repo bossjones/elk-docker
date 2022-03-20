@@ -20,7 +20,7 @@ rsyslog_centralized:
     - TZ=UTC
     # - RSYSLOG_DEBUG_FLAG=-d
   volumes:
-    - ./config:/config:ro
+    - ./config:/config
     - ./log:/log
     - ./rsyslog-centralized:/rsyslog-centralized
     - ./spool:/spool
