@@ -6,6 +6,34 @@
 # Run with:
 # docker-compose up
 
+rsyslog_centralized:
+  image: bossjones/rsyslog:0.3.0
+  command:
+    - /bin/sh
+  args: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o rsyslog /dev/null -m 640 /var/log/rsyslog-debug']
+  environment:
+    - _IMTCP_PORT=6170
+    - _IMUDP_PORT=6160
+    - _IMRELP_PORT=1601
+    - RSYSLOG_CONF=/rsyslog-centralized/etc/rsyslog.conf
+    - _RSYSLOG_SPOOL_PATH=/spool
+    - TZ=UTC
+    # - RSYSLOG_DEBUG_FLAG=-d
+  volumes:
+    - ./config:/config:ro
+    - ./log:/log
+    - ./rsyslog-centralized:/rsyslog-centralized
+    - ./spool:/spool
+    - ./work:/work
+
+  ports:
+    - "6160:6160/udp"
+    - "6170:6170/tcp"
+    - "1601:1601/tcp"
+  links:
+    - elk
+
+
 elk:
   build: .
   ports:
