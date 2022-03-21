@@ -80,7 +80,8 @@ fluent_bit_centralized:
     - rsyslog_centralized
   tty: true
   stdin_open: true
-
+  env_file:
+  - ./env
 
 elk:
   build: .
