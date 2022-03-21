@@ -53,6 +53,7 @@ fluentd_centralized:
     - ./fluentd-centralized-conf/grok.d:/grok.d
     - ./fluentd-centralized-conf/spool:/spool
     - ./fluentd-centralized-conf/work:/work
+    - ./fluentd-centralized-conf/geoip:/geoip
     - ./fluentd-centralized-conf/templates.d:/templates.d
     - ./fluentd-centralized-conf/position.d:/position.d
 
