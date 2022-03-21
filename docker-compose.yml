@@ -36,7 +36,7 @@ rsyslog_centralized:
   stdin_open: true
 
 fluentd_centralized:
-  image: bossjones/fluentd-elasticsearch:v3.0.0
+  image: bossjones/fluentd-elasticsearch:v4.0.0
   restart: always
   # entrypoint:
   #   - /bin/sh
