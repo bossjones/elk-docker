@@ -32,6 +32,8 @@ rsyslog_centralized:
     - "1601:1601/tcp"
   links:
     - elk
+  tty: true
+  stdin_open: true
 
 fluentd_centralized:
   image: bossjones/fluentd-elasticsearch:v3.0.0
@@ -59,6 +61,8 @@ fluentd_centralized:
     - "24220:24220/tcp"
   links:
     - rsyslog_centralized
+  tty: true
+  stdin_open: true
 
 fluent_bit_centralized:
   image: fluent/fluent-bit:1.0.5
@@ -74,6 +78,8 @@ fluent_bit_centralized:
   links:
     - elk
     - rsyslog_centralized
+  tty: true
+  stdin_open: true
 
 
 elk:
@@ -86,3 +92,5 @@ elk:
     - ES_HEAP_SIZE=2g
     - ES_JAVA_OPTS=-Xms2g -Xmx2g
     - LS_HEAP_SIZE=1g
+  tty: true
+  stdin_open: true
