@@ -1,3 +1,4 @@
 .env
 env
 GeoLite2-*.mmdb
+.vscode
