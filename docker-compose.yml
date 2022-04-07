@@ -34,6 +34,10 @@ rsyslog_centralized:
     - elk
   tty: true
   stdin_open: true
+  logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
 fluentd_centralized:
   image: bossjones/fluentd-elasticsearch:v4.0.0
@@ -64,6 +68,10 @@ fluentd_centralized:
     - rsyslog_centralized
   tty: true
   stdin_open: true
+  logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
 fluent_bit_centralized:
   image: fluent/fluent-bit:1.0.5
@@ -83,6 +91,10 @@ fluent_bit_centralized:
   stdin_open: true
   env_file:
   - ./env
+  logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
 elk:
   # build: .
@@ -98,3 +110,7 @@ elk:
     - ES_CONNECT_RETRY=100
   tty: true
   stdin_open: true
+  logging:
+      driver: json-file
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
