@@ -1,116 +1,117 @@
-# Docker Compose file for ELK stack
-
-# Build with:
-# docker-compose build elk
-
-# Run with:
-# docker-compose up
-
-rsyslog_centralized:
-  image: bossjones/rsyslog:0.3.0
-  # entrypoint:
-  #   - /bin/sh
-  # command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o syslog /dev/null -m 640 /var/log/rsyslog-debug', "/home/appliance/starter.sh rsyslog"]
-  environment:
-    - _IMTCP_PORT=6170
-    - _IMUDP_PORT=6160
-    - _IMRELP_PORT=1601
-    - RSYSLOG_CONF=/rsyslog-centralized/etc/rsyslog.conf
-    - _RSYSLOG_SPOOL_PATH=/spool
-    - TZ=UTC
-    # - RSYSLOG_DEBUG_FLAG=-d
-  volumes:
-    - ./rsyslog-conf/config:/config
-    - ./rsyslog-conf/log:/log
-    - ./rsyslog-conf/rsyslog-centralized:/rsyslog-centralized
-    - ./rsyslog-conf/spool:/spool
-    - ./rsyslog-conf/work:/work
-
-  ports:
-    - "6160:6160/udp"
-    - "6170:6170/tcp"
-    - "1601:1601/tcp"
-  links:
-    - elk
-  tty: true
-  stdin_open: true
-  logging:
-      driver: json-file
-      options:
-        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-
-fluentd_centralized:
-  image: bossjones/fluentd-elasticsearch:v4.0.0
-  restart: always
-  # entrypoint:
-  #   - /bin/sh
-  # command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o syslog /dev/null -m 640 /var/log/rsyslog-debug', "/home/appliance/starter.sh rsyslog"]
-  environment:
-    - FLUENTD_ARGS=--no-supervisor -vv
-    # Memory limit that the file tail plugin can use when appending data to the Engine
-    - TAIL_BUF_LIMIT=5MB
-    - RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR=1.2
-    - TZ=UTC
-  volumes:
-    - ./fluentd-centralized-conf/etc/fluent/config.d:/etc/fluent/config.d
-    - ./rsyslog-conf/log:/log
-    - ./fluentd-centralized-conf/grok.d:/grok.d
-    - ./fluentd-centralized-conf/spool:/spool
-    - ./fluentd-centralized-conf/work:/work
-    - ./fluentd-centralized-conf/geoip:/geoip
-    - ./fluentd-centralized-conf/templates.d:/templates.d
-    - ./fluentd-centralized-conf/position.d:/position.d
-
-  ports:
-    - "24231:24231/tcp"
-    - "24220:24220/tcp"
-  links:
-    - rsyslog_centralized
-  tty: true
-  stdin_open: true
-  logging:
-      driver: json-file
-      options:
-        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-
-fluent_bit_centralized:
-  image: fluent/fluent-bit:1.0.5
-  environment:
-    - TAIL_BUF_LIMIT=5MB
-  volumes:
-    - ./fluent-bit-centralized-conf/fluent-bit/etc:/fluent-bit/etc
-    - ./fluent-bit-centralized-conf/var/fluent-bit:/var/fluent-bit
-    - ./fluent-bit-centralized-conf/logging-volume:/logging-volume
-  ports:
-    - "2020:2020/tcp"
-    - "5140:5140/udp"
-  links:
-    - elk
-    - rsyslog_centralized
-  tty: true
-  stdin_open: true
-  env_file:
-  - ./env
-  logging:
-      driver: json-file
-      options:
-        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-
-elk:
-  # build: .
-  image: sebp/elk:oss-7.16.3
-  ports:
-    - "5601:5601"
-    - "9200:9200"
-    - "5044:5044"
-  environment:
-    - ES_HEAP_SIZE=2g
-    - ES_JAVA_OPTS=-Xms2g -Xmx2g
-    - LS_HEAP_SIZE=1g
-    - ES_CONNECT_RETRY=100
-  tty: true
-  stdin_open: true
-  logging:
-      driver: json-file
-      options:
-        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+version: '3.7'
+  # Docker Compose file for ELK stack
+  
+  # Build with:
+  # docker-compose build elk
+  
+  # Run with:
+  # docker-compose up
+services:
+  rsyslog_centralized:
+    image: bossjones/rsyslog:0.3.0
+    # entrypoint:
+    #   - /bin/sh
+    # command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o syslog /dev/null -m 640 /var/log/rsyslog-debug', "/home/appliance/starter.sh rsyslog"]
+    environment:
+      - _IMTCP_PORT=6170
+      - _IMUDP_PORT=6160
+      - _IMRELP_PORT=1601
+      - RSYSLOG_CONF=/rsyslog-centralized/etc/rsyslog.conf
+      - _RSYSLOG_SPOOL_PATH=/spool
+      - TZ=UTC
+      # - RSYSLOG_DEBUG_FLAG=-d
+    volumes:
+      - ./rsyslog-conf/config:/config
+      - ./rsyslog-conf/log:/log
+      - ./rsyslog-conf/rsyslog-centralized:/rsyslog-centralized
+      - ./rsyslog-conf/spool:/spool
+      - ./rsyslog-conf/work:/work
+  
+    ports:
+      - "6160:6160/udp"
+      - "6170:6170/tcp"
+      - "1601:1601/tcp"
+    links:
+      - elk
+    tty: true
+    stdin_open: true
+    logging:
+        driver: json-file
+        options:
+          tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  
+  fluentd_centralized:
+    image: bossjones/fluentd-elasticsearch:v4.0.0
+    restart: always
+    # entrypoint:
+    #   - /bin/sh
+    # command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o syslog /dev/null -m 640 /var/log/rsyslog-debug', "/home/appliance/starter.sh rsyslog"]
+    environment:
+      - FLUENTD_ARGS=--no-supervisor -vv
+      # Memory limit that the file tail plugin can use when appending data to the Engine
+      - TAIL_BUF_LIMIT=5MB
+      - RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR=1.2
+      - TZ=UTC
+    volumes:
+      - ./fluentd-centralized-conf/etc/fluent/config.d:/etc/fluent/config.d
+      - ./rsyslog-conf/log:/log
+      - ./fluentd-centralized-conf/grok.d:/grok.d
+      - ./fluentd-centralized-conf/spool:/spool
+      - ./fluentd-centralized-conf/work:/work
+      - ./fluentd-centralized-conf/geoip:/geoip
+      - ./fluentd-centralized-conf/templates.d:/templates.d
+      - ./fluentd-centralized-conf/position.d:/position.d
+  
+    ports:
+      - "24231:24231/tcp"
+      - "24220:24220/tcp"
+    links:
+      - rsyslog_centralized
+    tty: true
+    stdin_open: true
+    logging:
+        driver: json-file
+        options:
+          tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  
+  fluent_bit_centralized:
+    image: fluent/fluent-bit:1.0.5
+    environment:
+      - TAIL_BUF_LIMIT=5MB
+    volumes:
+      - ./fluent-bit-centralized-conf/fluent-bit/etc:/fluent-bit/etc
+      - ./fluent-bit-centralized-conf/var/fluent-bit:/var/fluent-bit
+      - ./fluent-bit-centralized-conf/logging-volume:/logging-volume
+    ports:
+      - "2020:2020/tcp"
+      - "5140:5140/udp"
+    links:
+      - elk
+      - rsyslog_centralized
+    tty: true
+    stdin_open: true
+    env_file:
+    - ./env
+    logging:
+        driver: json-file
+        options:
+          tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+  
+  elk:
+    # build: .
+    image: sebp/elk:oss-7.16.3
+    ports:
+      - "5601:5601"
+      - "9200:9200"
+      - "5044:5044"
+    environment:
+      - ES_HEAP_SIZE=2g
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+      - LS_HEAP_SIZE=1g
+      - ES_CONNECT_RETRY=100
+    tty: true
+    stdin_open: true
+    logging:
+        driver: json-file
+        options:
+          tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
