@@ -95,5 +95,6 @@ elk:
     - ES_HEAP_SIZE=2g
     - ES_JAVA_OPTS=-Xms2g -Xmx2g
     - LS_HEAP_SIZE=1g
+    - ES_CONNECT_RETRY=100
   tty: true
   stdin_open: true
