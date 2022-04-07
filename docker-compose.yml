@@ -47,7 +47,8 @@ services:
     #   - /bin/sh
     # command: ['-c', 'mkdir -p /var/spool/rsyslog; mkdir -p /log/client_logs; install -o syslog /dev/null -m 640 /var/log/rsyslog-debug', "/home/appliance/starter.sh rsyslog"]
     environment:
-      - FLUENTD_ARGS=--no-supervisor -vv
+      # TRACE: - FLUENTD_ARGS=--no-supervisor -vv
+      - FLUENTD_ARGS=--no-supervisor
       # Memory limit that the file tail plugin can use when appending data to the Engine
       - TAIL_BUF_LIMIT=5MB
       - RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR=1.2
