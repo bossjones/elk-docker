@@ -93,10 +93,10 @@ services:
     stdin_open: true
     env_file:
     - ./env
-    # logging:
-    #     driver: json-file
-    #     options:
-    #       tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    logging:
+        driver: json-file
+        options:
+          tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
   elk:
     # build: .
