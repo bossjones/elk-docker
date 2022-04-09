@@ -1,9 +1,9 @@
 version: '3.7'
   # Docker Compose file for ELK stack
-  
+
   # Build with:
   # docker-compose build elk
-  
+
   # Run with:
   # docker-compose up
 services:
@@ -26,7 +26,7 @@ services:
       - ./rsyslog-conf/rsyslog-centralized:/rsyslog-centralized
       - ./rsyslog-conf/spool:/spool
       - ./rsyslog-conf/work:/work
-  
+
     ports:
       - "6160:6160/udp"
       - "6170:6170/tcp"
@@ -39,7 +39,7 @@ services:
         driver: json-file
         options:
           tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  
+
   fluentd_centralized:
     image: bossjones/fluentd-elasticsearch:v4.0.0
     restart: always
@@ -62,7 +62,7 @@ services:
       - ./fluentd-centralized-conf/geoip:/geoip
       - ./fluentd-centralized-conf/templates.d:/templates.d
       - ./fluentd-centralized-conf/position.d:/position.d
-  
+
     ports:
       - "24231:24231/tcp"
       - "24220:24220/tcp"
@@ -74,7 +74,7 @@ services:
         driver: json-file
         options:
           tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  
+
   fluent_bit_centralized:
     image: fluent/fluent-bit:1.0.5
     environment:
@@ -93,11 +93,11 @@ services:
     stdin_open: true
     env_file:
     - ./env
-    logging:
-        driver: json-file
-        options:
-          tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  
+    # logging:
+    #     driver: json-file
+    #     options:
+    #       tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+
   elk:
     # build: .
     image: sebp/elk:oss-7.16.3
