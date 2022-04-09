@@ -468,8 +468,8 @@ UNIFI_CUSTOM_EVENT (wevent.ubnt_custom_event\(\): %{WORD:CUSTOM_UNFI_EVENT} %{WO
 UNSIGNED_INT [0-9]+
 ETHTYPE (?:[A-Fa-f0-9]{2}):(?:[A-Fa-f0-9]{2})
 ETHTYPE_DISCARD (?::[A-Fa-f0-9]{2})*
-NETFILTERMAC (?:%{MAC:destination.mac}:%{MAC:source.mac}:%{ETHTYPE:iptables.ether_type}?%{ETHTYPE_DISCARD}|%{MAC:destination.mac}%{ETHTYPE_DISCARD}:%{ETHTYPE:iptables.ether_type}?)
-IPTABLES_ETHERNET IN=%{DATA:iptables.input_device} OUT=%{DATA:iptables.output_device}?(?: MAC=%{NETFILTERMAC})?
+NETFILTERMAC (?:%{MAC:destination_mac}:%{MAC:source_mac}:%{ETHTYPE:iptables_ether_type}?%{ETHTYPE_DISCARD}|%{MAC:destination_mac}%{ETHTYPE_DISCARD}:%{ETHTYPE:iptables_ether_type}?)
+IPTABLES_ETHERNET IN=%{DATA:iptables_input_device} OUT=%{DATA:iptables_output_device}?(?: MAC=%{NETFILTERMAC})?
 IPTABLES_PORT_PAIR SPT=%{UNSIGNED_INT:source.port:integer} DPT=%{UNSIGNED_INT:destination.port:integer}
 IPTABLES_TCP_FLAGS ((?<= )(CWR|ECE|URG|ACK|PSH|RST|SYN|FIN))*
 IPTABLES_TCP_SEQ SEQ=%{UNSIGNED_INT:iptables.tcp.seq:integer} ACK=%{UNSIGNED_INT:iptables.tcp.ack:integer}
@@ -526,7 +526,7 @@ BOSS_UNIFI_IPTABLES_LOG_RULES %{SYSLOGTIMESTAMP:timestamp_logged}%{SPACE}%{BACUL
 # EXAMPLE: SRC=192.168.1.8 DST=192.168.1.1 LEN=52 TOS=0x00 PREC=0x00 TTL=64 ID=61516 DF PROTO=TCP SPT=8080 DPT=45096 WINDOW=246 RES=0x00 ACK URGP=0
 # EXAMPLE: SRC=172.217.10.138 DST=192.168.0.3 LEN=115 TOS=0x00 PREC=0x00 TTL=122 ID=53703 PROTO=TCP SPT=443 DPT=52170 WINDOW=294 RES=0x00 ACK PSH URGP=0
 # EXAMPLE: SRC=192.168.1.212 DST=192.168.1.1 LEN=102 TOS=0x00 PREC=0x00 TTL=64 ID=2810 PROTO=UDP SPT=61080 DPT=53 LEN=82
-BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.destination.ip} LEN=%{UNSIGNED_INT:firewall.packet_length} TOS=0x%{BASE16NUM:firewall.tos} PREC=0x%{BASE16NUM:firewall.precidence_field} TTL=%{UNSIGNED_INT:firewall.ttl} ID=%{UNSIGNED_INT:firewall.id} %{GREEDYDATA:firewall.tcp_opts} PROTO=%{WORD:firewall.nf_protocol} SPT=%{INT:firewall.spt} DPT=%{INT:firewall.dtp} %{GREEDYDATA:firewall.tcp_opts}
+BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall_source_ip} DST=%{IPV4:firewall_destination_ip} LEN=%{UNSIGNED_INT:firewall_packet_length} TOS=0x%{BASE16NUM:firewall_tos} PREC=0x%{BASE16NUM:firewall_precidence_field} TTL=%{UNSIGNED_INT:firewall_ttl} ID=%{UNSIGNED_INT:firewall_id} %{GREEDYDATA:firewall_tcp_opts} PROTO=%{WORD:firewall_nf_protocol} SPT=%{INT:firewall_spt} DPT=%{INT:firewall_dtp} %{GREEDYDATA:firewall_tcp_opts}
 # --------------------------------------------------------------------------------------
 # SOURCE: https://community.ubnt.com/t5/UniFi-Routing-Switching/
 # Analyzing-USG-firewall-logs-for-attack-visibility/m-p/2150450#M67353
@@ -575,19 +575,19 @@ BOSSJONES_UNIFI_SECURITYGATEWAY_KERNEL_START %{BOSSJONES_UNIFI} %{BOSSJONES_UNIF
 # DEBUG: Matches ->  TOR BLOCK:
 # INFO: https://community.ubnt.com/t5/UniFi-Routing-Switching/IPS-and-Firewall-ordering/td-p/2295457
 # --------------------------------------------------------------------------------------
-BOSSJONES_UNIFI_SECURITYGATEWAY_IDS_LOGS_START %{WORD:firewall.ids_block_type} BLOCK:\s+
+BOSSJONES_UNIFI_SECURITYGATEWAY_IDS_LOGS_START %{WORD:firewall_ids_block_type} BLOCK:\s+
 # --------------------------------------------------------------------------------------
 # DEBUG: Matches -> [WAN_LOCAL-3002-D]
 # --------------------------------------------------------------------------------------
-BOSSJONES_UNIFI_SECURITYGATEWAY_FIREWALL_LOGS \[%{WORD:firewall.interface}-%{WORD:firewall.rule_index}-%{WORD:firewall.rule_action}\]
+BOSSJONES_UNIFI_SECURITYGATEWAY_FIREWALL_LOGS \[%{WORD:firewall_interface}-%{WORD:firewall_rule_index}-%{WORD:firewall_rule_action}\]
 # --------------------------------------------------------------------------------------
 # DEBUG: Matches -> IN=eth0 OUT= MAC=80:2a:a8:00:11:33:00:11:22:33:44:66:08:00
 # --------------------------------------------------------------------------------------
-BOSSJONES_UNIFI_SECURITYGATEWAY_FIREWALL_IPTABLES_ETHERNET IN=%{DATA:iptables.input_device} OUT=%{DATA:iptables.output_device}?(?: MAC=%{NETFILTERMAC:mac})?
+BOSSJONES_UNIFI_SECURITYGATEWAY_FIREWALL_IPTABLES_ETHERNET IN=%{DATA:iptables_input_device} OUT=%{DATA:iptables_output_device}?(?: MAC=%{NETFILTERMAC:mac})?
 # --------------------------------------------------------------------------------------
 # DEBUG: Matches -> SRC=192.168.1.212 DST=192.168.1.1 LEN=102 TOS=0x00 PREC=0x00 TTL=64 ID=2810 PROTO=UDP SPT=61080 DPT=53 LEN=82
 # --------------------------------------------------------------------------------------
-BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.destination.ip} LEN=%{UNSIGNED_INT:firewall.packet_length} TOS=0x%{BASE16NUM:firewall.tos} PREC=0x%{BASE16NUM:firewall.precidence_field} TTL=%{UNSIGNED_INT:firewall.ttl} ID=%{UNSIGNED_INT:firewall.id}(?:%{SPACE})?(?:%{WORD:firewall.dont_fragment})?(?:%{SPACE})?PROTO=%{WORD:firewall.nf_protocol} SPT=%{INT:firewall.spt} DPT=%{INT:firewall.dtp} %{GREEDYDATA:firewall.tcp_opts}
+BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall_source_ip} DST=%{IPV4:firewall_destination_ip} LEN=%{UNSIGNED_INT:firewall_packet_length} TOS=0x%{BASE16NUM:firewall_tos} PREC=0x%{BASE16NUM:firewall_precidence_field} TTL=%{UNSIGNED_INT:firewall_ttl} ID=%{UNSIGNED_INT:firewall_id}(?:%{SPACE})?(?:%{WORD:firewall_dont_fragment})?(?:%{SPACE})?PROTO=%{WORD:firewall_nf_protocol} SPT=%{INT:firewall_spt} DPT=%{INT:firewall_dtp} %{GREEDYDATA:firewall_tcp_opts}
 # # SOURCE: https://github.com/adriansr/beats/blob/938b0322a993021d79ed2a8be24055a7f3e69300/x-pack/filebeat/module/iptables/log/test/ubiquiti.log
 # # EXAMPLE: Jan  5 20:17:05 MainFirewall kernel: [LAN_LOCAL-default-A]IN=eth0.90 OUT= MAC=90:10:92:6e:ea:a7:90:10:73:ba:d6:77:08:00:45:fc:02:1c SRC=192.168.48.137 DST=255.55.174.225 LEN=540 TOS=0x1C PREC=0xE0 TTL=64 ID=27223 PROTO=UDP SPT=48689 DPT=48689 LEN=520
 # # EXAMPLE: Jan  5 20:17:01 MainFirewall kernel: [WAN_OUT-2000-A]IN=eth0 OUT=eth2 MAC=90:10:20:76:8d:20:90:10:24:67:f4:89:08:00 SRC=192.168.134.158 DST=192.0.2.25 LEN=265 TOS=0x00 PREC=0x00 TTL=63 ID=51768 DF PROTO=TCP SPT=43189 DPT=443 WINDOW=159 RES=0x00 ACK PSH URGP=0
@@ -616,8 +616,8 @@ BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.d
 #   UNSIGNED_INT [0-9]+
 #   ETHTYPE (?:[A-Fa-f0-9]{2}):(?:[A-Fa-f0-9]{2})
 #   ETHTYPE_DISCARD (?::[A-Fa-f0-9]{2})*
-#   NETFILTERMAC (?:%{MAC:destination.mac}:%{MAC:source.mac}:%{ETHTYPE:iptables.ether_type}?%{ETHTYPE_DISCARD}|%{MAC:destination.mac}%{ETHTYPE_DISCARD}:%{ETHTYPE:iptables.ether_type}?)
-#   IPTABLES_ETHERNET IN=%{DATA:iptables.input_device} OUT=%{DATA:iptables.output_device}?(?: MAC=%{NETFILTERMAC})?
+#   NETFILTERMAC (?:%{MAC:destination_mac}:%{MAC:source_mac}:%{ETHTYPE:iptables_ether_type}?%{ETHTYPE_DISCARD}|%{MAC:destination_mac}%{ETHTYPE_DISCARD}:%{ETHTYPE:iptables_ether_type}?)
+#   IPTABLES_ETHERNET IN=%{DATA:iptables_input_device} OUT=%{DATA:iptables_output_device}?(?: MAC=%{NETFILTERMAC})?
 #   IPTABLES_PORT_PAIR SPT=%{UNSIGNED_INT:source.port:integer} DPT=%{UNSIGNED_INT:destination.port:integer}
 #   IPTABLES_TCP_FLAGS ((?<= )(CWR|ECE|URG|ACK|PSH|RST|SYN|FIN))*
 #   IPTABLES_TCP_SEQ SEQ=%{UNSIGNED_INT:iptables.tcp.seq:integer} ACK=%{UNSIGNED_INT:iptables.tcp.ack:integer}
@@ -648,7 +648,7 @@ BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip} DST=%{IPV4:firewall.d
 #   BOSS_UNIFI_IPTABLES_SECURITY_GATEWAY \A%{SYSLOGTIMESTAMP:timestamp_logged}%{SPACE}%{SYSLOGHOST:hostname}%{SPACE}%{WORD:programname}%{NOTSPACE}%{SPACE}\[%{WORD:iptables.interface}-%{WORD:iptables.rule_index}-%{UBIQUITI_FIELD:iptables.rule_action}\]%{UBIQUITI_FIELD_IPTABLES_RULE_SET:iptables.rule_set}
 #   # FIXME: Todo, add field names to these guys
 #   BOSS_UNIFI_IPTABLES_LOG_RULES \A%{SYSLOGTIMESTAMP:timestamp_logged}%{SPACE}%{BACULA_DEVICE}%{SPACE}%{BACULA_JOB}%{NOTSPACE}%{SPACE}\[%{WORD:iptables.interface}-%{WORD:iptables.rule_index}-%{UBIQUITI_FIELD:iptables.rule_action}\]%{UBIQUITI_FIELD_IPTABLES_RULE_SET}
-# BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall.source.ip}\s*DST=%{IPV4:firewall.destination.ip}\s*LEN=%{UNSIGNED_INT:firewall.packet_length}\s*TOS=0x%{BASE16NUM:firewall.tos}\s*PREC=0x%{BASE16NUM:firewall.precidence_field}\s*TTL=%{UNSIGNED_INT:firewall.ttl}\s*ID=%{UNSIGNED_INT.firewall.id}\s*?*PROTO=(%{WORD:nf_protocol})
+# BOSSJONES_IPTABLES_IP_START SRC=%{IPV4:firewall_source_ip}\s*DST=%{IPV4:firewall_destination_ip}\s*LEN=%{UNSIGNED_INT:firewall_packet_length}\s*TOS=0x%{BASE16NUM:firewall_tos}\s*PREC=0x%{BASE16NUM:firewall_precidence_field}\s*TTL=%{UNSIGNED_INT:firewall_ttl}\s*ID=%{UNSIGNED_INT.firewall_id}\s*?*PROTO=(%{WORD:nf_protocol})
 # FIXME: ADD THIS TO BOSSLAB-PLAYBOOKS
 BOSS_UNSIGNED_INT [0-9]+
 BOSS_IPTABLES_ETHERNET IN=%{WORD:in_device}? OUT=%{WORD:out_device}?(?: MAC=%{NETFILTERMAC:mac})?
