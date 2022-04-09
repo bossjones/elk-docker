@@ -39,6 +39,8 @@ services:
         driver: json-file
         options:
           tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+          max-size: "10m"
+          max-file: "5"
 
   fluentd_centralized:
     image: bossjones/fluentd-elasticsearch:v4.0.0
@@ -74,6 +76,8 @@ services:
         driver: json-file
         options:
           tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+          max-size: "10m"
+          max-file: "5"
 
   fluent_bit_centralized:
     image: fluent/fluent-bit:1.0.5
@@ -97,6 +101,8 @@ services:
         driver: json-file
         options:
           tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+          max-size: "10m"
+          max-file: "5"
 
   elk:
     # build: .
@@ -116,3 +122,5 @@ services:
         driver: json-file
         options:
           tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+          max-size: "10m"
+          max-file: "5"
