@@ -43,7 +43,7 @@ services:
           max-file: "5"
 
   fluentd_centralized:
-    image: bossjones/fluentd-elasticsearch:v4.0.0
+    image: bossjones/fluentd-elasticsearch:v5.0.0
     restart: always
     # entrypoint:
     #   - /bin/sh
